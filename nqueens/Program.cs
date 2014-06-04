@@ -96,13 +96,9 @@ namespace nqueens
             var row = queens.Count;
             var newCoordsSum = row + col;
             var newCoordsDifference = row - col;
-
-            var result =
-                !queens.Contains(col)
-                && !existingCoordSums.Contains(newCoordsSum)
-                && !existingCoordDifferences.Contains(newCoordsDifference);
-
-            return result;
+            return !queens.Contains(col)
+                   && !existingCoordSums.Contains(newCoordsSum)
+                   && !existingCoordDifferences.Contains(newCoordsDifference);
         }
     }
 }
