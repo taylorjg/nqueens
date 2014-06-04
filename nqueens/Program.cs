@@ -6,9 +6,11 @@ namespace nqueens
 {
     internal class Program
     {
-        private static void Main()
+        private static void Main(string[] args)
         {
-            DisplaySolutions(Queens(8));
+            var n = (args.Length >= 1) ? Convert.ToInt32(args[0]) : 4;
+            var take = (args.Length >= 2) ? Convert.ToInt32(args[1]) : int.MaxValue;
+            DisplaySolutions(Queens(n).Take(take));
         }
 
         private static void DisplaySolutions(IEnumerable<IList<int>> solutions)
