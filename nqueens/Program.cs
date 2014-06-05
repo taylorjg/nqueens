@@ -9,36 +9,27 @@ namespace nqueens
         private static void Main(string[] args)
         {
             var n = (args.Length >= 1) ? Convert.ToInt32(args[0]) : 4;
-            var take = (args.Length >= 2) ? Convert.ToInt32(args[1]) : int.MaxValue;
-            DisplaySolutions(Queens(n).Take(take));
+            var count = (args.Length >= 2) ? Convert.ToInt32(args[1]) : int.MaxValue;
+            DisplaySolutions(Queens(n).Take(count));
         }
 
         private static void DisplaySolutions(IEnumerable<IList<int>> solutions)
         {
-            // ReSharper disable ReturnValueOfPureMethodIsNotUsed
-            solutions.Select((solution, index) =>
-                {
-                    DisplaySolution(solution, index);
-                    Console.WriteLine();
-                    return 0;
-                }).ToList();
-            // ReSharper restore ReturnValueOfPureMethodIsNotUsed
+            solutions.ForEachWithIndex(DisplaySolution);
         }
 
         private static void DisplaySolution(IList<int> solution, int solutionIndex)
         {
             Console.WriteLine("Solution {0}", solutionIndex + 1);
+            Console.WriteLine("[{0}]", string.Join(",", solution.Select(i => Convert.ToString(i))));
             PrintBoard(solution, solution.Count);
         }
 
         public static void PrintBoard(IList<int> solution, int n)
         {
-            if (n == 0) return;
-            if (solution.Count == 0) return;
-
             var rowDivider = MakeRowDivider(n);
 
-            for (var row = 0; row < n && row < solution.Count; row++)
+            for (var row = 0; row < n; row++)
             {
                 Console.WriteLine(rowDivider);
                 var line = string.Empty;
@@ -90,7 +81,7 @@ namespace nqueens
             }
         }
 
-        private static bool IsSafe(int col, IList<int> queens)
+        private static bool IsSafe(int col, ICollection<int> queens)
         {
             var rowIndexes = Enumerable.Range(0, queens.Count).Reverse().ToList();
             var existingCoordSums = rowIndexes.Zip(queens, (r, c) => r + c);
@@ -98,9 +89,10 @@ namespace nqueens
             var row = queens.Count;
             var newCoordsSum = row + col;
             var newCoordsDifference = row - col;
-            return !queens.Contains(col)
-                   && !existingCoordSums.Contains(newCoordsSum)
-                   && !existingCoordDifferences.Contains(newCoordsDifference);
+            return
+                !queens.Contains(col)
+                && !existingCoordSums.Contains(newCoordsSum)
+                && !existingCoordDifferences.Contains(newCoordsDifference);
         }
     }
 }
